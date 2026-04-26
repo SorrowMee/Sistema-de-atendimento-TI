@@ -6,11 +6,12 @@ public class chamado {
 	private usuarios usuarios;
 	private tecnicos tecnicos;
 	private categoria categoria;
+	private static int contadorid = 1;
 	
 	
 	
-	public chamado(int id, String descricao, String status, usuarios usuarios, tecnicos tecnicos, categoria categoria) {
-		this.id = id;
+	public chamado(String descricao, String status, usuarios usuarios, tecnicos tecnicos, categoria categoria) {
+		this.id = contadorid;
 		this.descricao = descricao;
 		this.status = status;
 		this.usuarios = usuarios;

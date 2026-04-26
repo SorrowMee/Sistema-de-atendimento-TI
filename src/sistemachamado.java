@@ -1,3 +1,4 @@
+import javax.swing.JOptionPane;
 
 public class sistemachamado {
 	usuarios[] usuarios = new usuarios[100];
@@ -9,9 +10,9 @@ public class sistemachamado {
 	int qtdcategoria = 0;
 	int qtdchamado = 0;
 	
-	public void cadastrarUsuario(int id, String nome, String email) {
+	public void cadastrarUsuario(String nome, String email) {
 		if (qtdusuarios < usuarios.length) {
-			usuarios[qtdusuarios] = new usuarios(id, nome, email);
+			usuarios[qtdusuarios] = new usuarios(nome, email);
 			qtdusuarios++;
 			System.out.println("Usuario cadastrado com sucesso!");			
 		} else {
@@ -29,9 +30,9 @@ public class sistemachamado {
         return texto;
 	}
 	
-	public void cadastrartecnicos(int idT, String nomeT, String especialidadeT) {
+	public void cadastrartecnicos(String nomeT, String especialidadeT) {
 		if (qtdtecnicos < tecnicos.length) {
-			tecnicos[qtdtecnicos] = new tecnicos(idT, nomeT, especialidadeT);
+			tecnicos[qtdtecnicos] = new tecnicos(nomeT, especialidadeT);
 			qtdtecnicos++;
 			System.out.println("Tecnico cadastrado com sucesso!");			
 		} else {
@@ -40,17 +41,17 @@ public class sistemachamado {
 	}
 	
 	
-	public void listatecnicos() {
-		for (int i = 0; i < qtdtecnicos; i++) {
-			System.out.println("ID" + tecnicos[i].getId() + " Nome " + tecnicos[i].getNome());
+	//public void listatecnicos() {
+		//for (int i = 0; i < qtdtecnicos; i++) {
+			//System.out.println("ID" + tecnicos[i].getId() + " Nome " + tecnicos[i].getNome());
 			
-		}
-	}
+		//}
+	//}
 	
 	
-	public void cadastrarcategoria(int idC, String nomeC) {
+	public void cadastrarcategoria(String nomeC) {
 		if (qtdcategoria < categoria.length) {
-			categoria[qtdcategoria] = new categoria (idC, nomeC);
+			categoria[qtdcategoria] = new categoria (nomeC);
 			qtdcategoria++;
 			System.out.println(" cadastrado com sucesso!");			
 		} else {
@@ -59,6 +60,21 @@ public class sistemachamado {
 	}
 	
 	
-	
+	public void cadastrarchamado(String descricao, String status, int IDU, int IDT, int IDC) { 
+		usuarios u = procurausu(IDU);
+		tecnicos t = procuratec(IDT);
+		categoria c = procuracat(IDC);
+		
+		if(u != null && t != null && c != null) {
+			if(qtdchamado < chamado.length) {
+				chamado[qtdchamado] = new chamado(descricao, status, u, t, c);
+				qtdchamado++;
+				JOptionPane.showMessageDialog(null, "Chamado criado com sucesso");
+			}
+		} else {
+			JOptionPane.showMessageDialog(null, "Erro");
+		}
+	}
+		
 
 }

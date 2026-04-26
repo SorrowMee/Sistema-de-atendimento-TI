@@ -3,10 +3,11 @@ public class tecnicos {
 	private int id;
 	private String nome;
 	private String especialidade;
+	private static int contadorid = 1;
 	
 	//construtor definindo id, nome, usuarios
-	public tecnicos(int id, String nome, String especialidade) {
-		this.id = id;
+	public tecnicos(String nome, String especialidade) {
+		this.id = contadorid++;
 		this.nome = nome;
 		this.especialidade = nome;
 		
