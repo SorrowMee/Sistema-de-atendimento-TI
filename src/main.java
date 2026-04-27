@@ -1,110 +1,90 @@
-import java.util.Scanner;
 import javax.swing.JOptionPane;
 
-
-
 public class main {
-	public static void main(String[] args) {
-		Scanner leitor = new Scanner(System.in);
-		sistemachamado sistema = new sistemachamado();
-		int opcao = -1;
-		
-		Object[] perfis = { "Admin", "Tecnico", "Usuario" };
-		
-		int escolha = JOptionPane.showOptionDialog(null, "Como voce deseja acessar o sistema?", "Login do sistema", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, perfis, perfis[0]);
-		String perfillogado;
-		if (escolha == 0) perfillogado = "Admin";
-		else if(escolha == 1) perfillogado = "Tecnico";
-		else if(escolha == 2) perfillogado = "Usuario";
-		else return;
-		
-		
-		
-		while (opcao != 0) {
-			String[] botoes;
-			if(perfillogado.equals("Admin")) {
-				botoes = new String[] {"Cadastrar usuario", "cadastrar tecnico", "cadastrar categoria", "listar chamados", "sair"};
-				
-			}else if (perfillogado.equals("tecnico")) {
-				botoes = new String[] {"Alterar Status", "Listar chamados", "Sair"};
-			} else {
-				botoes = new String[] {"abrir chamado", "Listar meus chamados", "Sair"};
-			}
-			
-			int clique = JOptionPane.showOptionDialog(null, "Ola " + perfillogado + "O que deseja fazer?", "Menu principal" , JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, botoes, botoes[0]);
-			
-			
-			if(clique == -1 || botoes[clique].equals("Sair")) {
-				opcao = 0;
-			} else {
-				String acao = botoes[clique];
-				
-				switch (acao) {
-				case "Cadastrar usuario":
-					String nome = JOptionPane.showInputDialog("Nome:");
-					String email = JOptionPane.showInputDialog("Email");
-					sistema.cadastrarUsuario(nome, email);
-					
-				case "cadastrar tecnico":
-					String nomeT = JOptionPane.showInputDialog("Nome: ");
-					String emailT = JOptionPane.showInputDialog("Email:");
-					sistema.cadastrartecnicos(nomeT, emailT);
-					break;
-				case "cadastrar categoria":
-					String nomeC = JOptionPane.showInputDialog("Nome");
-					sistema.cadastrarcategoria(nomeC);
-					break;
-				case "abrir chamado":
-					String descricao = JOptionPane.showInputDialog("Descrição do problema:");
-					String status = "Aberto";
-					
-					int IDU = Integer.parseInt(JOptionPane.showInputDialog(sistema.listausuarios() + "\nDigite o ID do Usuário:"));
-					int IDT = Integer.parseInt(JOptionPane.showInputDialog(sistema.listausuarios() + "\nDigite o ID do Usuário:"));
-					int IDC = Integer.parseInt(JOptionPane.showInputDialog(sistema.listausuarios() + "\nDigite o ID do Usuário:"));
-					
-					
-					sistema.cadastrarchamado(descricao, status, IDU, IDT, IDC);
-					break;
-				}
-			}
-		}
-		
-			
-		}
-			
-	public static String perfil(String perfil) {
-		String display = "Logado como:" + perfil + "\n";
-		
-		
-		if (perfil.equals("Admin")) {
-			display += "1 - Cadastrar usuario \n" +
-					   "2 - Cadastrar tecnico \n" +
-					   "3 - Cadastrar tecnicos \n"+
-					   "4 - Abrir Chamados \n" +
-					   "5 - Alterar status";
-		} else if (perfil.equals("Tecnico")) {
-			display += "2- esse teste funcionou";
-		} else if (perfil.equals("Usuario")) {
-			display += "3- esse teste funcionou";
-		}
-		
-		display += "Sair";
-		return display;
-	}
+    public static void main(String[] args) {
+        sistemachamado sistema = new sistemachamado();
+        sistema.carregarUsuariosArquivo(); 
+        sistema.carregarCategoriasArquivo();
 
+ 
+        Object[] perfis = { "Admin", "Tecnico", "Usuario" };
+        int escolha = JOptionPane.showOptionDialog(null, "Selecione seu perfil:", "Login", 
+                JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, perfis, perfis[0]);
+        if (escolha == -1) return;
+        String perfillogado = perfis[escolha].toString();
+
+
+        Object[] opcoesLogin;
+        
+        if (perfillogado.equals("Usuario")) {
+            opcoesLogin = new Object[]{ "Logar", "Cadastrar Novo", "Sair" };
+        } else {
+            opcoesLogin = new Object[]{ "Logar", "Sair" };
+        }
+        
+        int acao = JOptionPane.showOptionDialog(null, "Perfil: " + perfillogado, "Acesso", 
+                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, opcoesLogin, opcoesLogin[0]);
+
+        if (acao != -1 && opcoesLogin[acao].equals("Cadastrar Novo")) {
+            String n = JOptionPane.showInputDialog("Nome:");
+            String e = JOptionPane.showInputDialog("Email:");
+            sistema.cadastrarUsuario(n, e, perfillogado);
+            JOptionPane.showMessageDialog(null, "Cadastrado! Agora faça login.");
+        } else if (acao == -1 || opcoesLogin[acao].equals("Sair")) return;
+
+        String emailLogin = JOptionPane.showInputDialog("Email de " + perfillogado + ":");
+        if (!sistema.validarLogin(emailLogin, perfillogado)) {
+            JOptionPane.showMessageDialog(null, "Acesso negado!");
+            return;
+        }
+
+
+        int opcao = -1;
+        while (opcao != 0) {
+            String[] botoes;
+            if (perfillogado.equals("Admin")) {
+                botoes = new String[]{"Cadastrar usuario", "Cadastrar tecnico", "Cadastrar categoria","Abrir Chamado","Alterar Status","Listar usuários","Listar chamados","Listar categoria", "Sair"};
+            } else if (perfillogado.equals("Tecnico")) {
+                botoes = new String[]{"Alterar Status", "Listar chamados", "Sair"};
+            } else {
+                botoes = new String[]{"Abrir chamado", "Meus chamados", "Sair"};
+            }
+
+            int clique = JOptionPane.showOptionDialog(null, "Olá " + perfillogado, "Menu", 
+                    JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, botoes, botoes[0]);
+
+            if (clique == -1 || botoes[clique].equals("Sair")) break;
+
+            String comando = botoes[clique];
+            switch (comando) {
+                case "Cadastrar usuario":
+                    sistema.cadastrarUsuario(JOptionPane.showInputDialog("Nome:"), JOptionPane.showInputDialog("Email:"), "Usuario");
+                    break;
+                case "Cadastrar tecnico":
+                    sistema.cadastrartecnicos(JOptionPane.showInputDialog("Nome:"), JOptionPane.showInputDialog("Especialidade:"));
+                    break;
+                case "Cadastrar categoria":
+                    sistema.cadastrarcategoria(JOptionPane.showInputDialog("Nome da Categoria:"));
+                    break;
+                case "Abrir Chamado":
+                	
+                	try {
+                    String desc = JOptionPane.showInputDialog("Descrição:");
+                    int idU = Integer.parseInt(JOptionPane.showInputDialog(sistema.listausuarios() + "ID Usuário:"));
+                    int idT = Integer.parseInt(JOptionPane.showInputDialog(sistema.listatecnicos() + "ID Técnico:"));
+                    int idC = Integer.parseInt(JOptionPane.showInputDialog(sistema.listarcategorias() + "ID Categoria:"));
+                    sistema.cadastrarchamado(desc, "Aberto", idU, idT, idC);
+                    break;
+                    } catch (Exception ex) {
+                    	JOptionPane.showMessageDialog(null, "Erro:Digite apenas numero");
+                    }
+                case "Listar usuários":
+                	JOptionPane.showMessageDialog(null, sistema.listausuarios());
+                	break;
+                case "Listar categoria":
+                	JOptionPane.showMessageDialog(null, sistema.listarcategorias());
+                	break;
+            }
+        }
+    }
 }
-
-
-
-//String menu = "Sistema de chamados \n" +
-		 // "1 - Cadastrar usuario \n" +
-		  //"2 - Cadastrar tecnicos \n" +
-		  //"3 - Cadastrar categorias \n" +
-		  //"4 - Abrir Chamados \n" +
-		  //"5 - Alterar Status \n" +
-		  //"6 - Listar dados \n";
-//String leitura = JOptionPane.showInputDialog(menu);
-//if (leitura == null) break;
-
-//opcao = Integer.parseInt(leitura);
-

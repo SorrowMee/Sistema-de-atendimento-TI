@@ -12,7 +12,9 @@ public class categoria {
 	}
 	
 	//getters e setter utilizando o this acima
+	public int getId() { return id;}
 	public void setId(int id) { this.id = id; }
+	
 	
 	public String getNome() { return nome; }
 	public void setNome(String nome) {this.nome = nome;}
