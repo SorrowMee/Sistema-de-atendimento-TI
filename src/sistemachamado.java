@@ -68,7 +68,7 @@ public class sistemachamado {
         }
     }
 
-    // Listagens formatadas para o JOptionPane
+
     public String listausuarios() {
         String s = "--- USUÁRIOS ---\n";
         for (int i = 0; i < qtdusuarios; i++) 
