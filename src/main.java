@@ -5,6 +5,7 @@ public class main {
         sistemachamado sistema = new sistemachamado();
         sistema.carregarUsuariosArquivo(); 
         sistema.carregarCategoriasArquivo();
+        sistema.carregarTecnicosArquivo();
 
  
         Object[] perfis = { "Admin", "Tecnico", "Usuario" };
@@ -28,7 +29,7 @@ public class main {
         if (acao != -1 && opcoesLogin[acao].equals("Cadastrar Novo")) {
             String n = JOptionPane.showInputDialog("Nome:");
             String e = JOptionPane.showInputDialog("Email:");
-            sistema.cadastrarUsuario(n, e, perfillogado);
+            sistema.cadastrarUsuario(n, e);
             JOptionPane.showMessageDialog(null, "Cadastrado! Agora faça login.");
         } else if (acao == -1 || opcoesLogin[acao].equals("Sair")) return;
 
@@ -43,7 +44,7 @@ public class main {
         while (opcao != 0) {
             String[] botoes;
             if (perfillogado.equals("Admin")) {
-                botoes = new String[]{"Cadastrar usuario", "Cadastrar tecnico", "Cadastrar categoria","Abrir Chamado","Alterar Status","Listar usuários","Listar chamados","Listar categoria", "Sair"};
+                botoes = new String[]{"Cadastrar usuario", "Cadastrar tecnico", "Cadastrar categoria","Abrir Chamado","Alterar Status","Listar usuários","Listar chamados","Listar categoria", "Listar tecnicos", "Sair"};
             } else if (perfillogado.equals("Tecnico")) {
                 botoes = new String[]{"Alterar Status", "Listar chamados", "Sair"};
             } else {
@@ -58,7 +59,7 @@ public class main {
             String comando = botoes[clique];
             switch (comando) {
                 case "Cadastrar usuario":
-                    sistema.cadastrarUsuario(JOptionPane.showInputDialog("Nome:"), JOptionPane.showInputDialog("Email:"), "Usuario");
+                    sistema.cadastrarUsuario(JOptionPane.showInputDialog("Nome:"), JOptionPane.showInputDialog("Email:"));
                     break;
                 case "Cadastrar tecnico":
                     sistema.cadastrartecnicos(JOptionPane.showInputDialog("Nome:"), JOptionPane.showInputDialog("Especialidade:"));
@@ -77,13 +78,17 @@ public class main {
                     break;
                     } catch (Exception ex) {
                     	JOptionPane.showMessageDialog(null, "Erro:Digite apenas numero");
+                    	break;
                     }
+                	
                 case "Listar usuários":
                 	JOptionPane.showMessageDialog(null, sistema.listausuarios());
                 	break;
                 case "Listar categoria":
                 	JOptionPane.showMessageDialog(null, sistema.listarcategorias());
                 	break;
+                case "Listar tecnicos":
+                	JOptionPane.showMessageDialog(null, sistema.listatecnicos());
             }
         }
     }

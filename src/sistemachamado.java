@@ -2,14 +2,13 @@ import javax.swing.JOptionPane;
 import java.io.*;
 
 public class sistemachamado {
-    usuarios[] usuarios = new usuarios[100];
+    usuarios[] 	usuarios = new usuarios[100];
     tecnicos[] tecnicos = new tecnicos[50];
     categoria[] categoria = new categoria[20];
     chamado[] chamado = new chamado[200];
     
     int qtdusuarios = 0, qtdtecnicos = 0, qtdcategoria = 0, qtdchamado = 0;
 
-    // Métodos de Procura (Busca o objeto real pelo ID)
     public usuarios procurausu(int id) {
         for (int i = 0; i < qtdusuarios; i++) {
             if (usuarios[i].getId() == id) return usuarios[i];
@@ -31,19 +30,17 @@ public class sistemachamado {
         return null;
     }
 
-    // Cadastros
-    public void cadastrarUsuario(String nome, String email, String perfil) {
+    public void cadastrarUsuario(String nome, String email) {
         if (qtdusuarios < usuarios.length) {
-            usuarios[qtdusuarios] = new usuarios(nome, email, perfil);
-            qtdusuarios++;
+            usuarios[qtdusuarios++] = new usuarios(nome, email, "Usuario");
             salvarUsuariosArquivo();
         }
     }
 
     public void cadastrartecnicos(String nome, String especialidade) {
         if (qtdtecnicos < tecnicos.length) {
-            tecnicos[qtdtecnicos] = new tecnicos(nome, especialidade);
-            qtdtecnicos++;
+            tecnicos[qtdtecnicos++] = new tecnicos(nome, especialidade, "Tecnicos");
+            salvartecnicosarquivo();
         }
     }
 
@@ -72,25 +69,32 @@ public class sistemachamado {
     public String listausuarios() {
         String s = "--- USUÁRIOS ---\n";
         for (int i = 0; i < qtdusuarios; i++) 
+        	if(usuarios[i].getPerfil().equals("Usuario")) {
             s += usuarios[i].getId() + " - " + usuarios[i].getNome() + " (" + usuarios[i].getPerfil() + ")\n";
-        return s;
+        	}
+        
+            return s;
     }
 
     public String listatecnicos() {
-        String s = "--- TÉCNICOS ---\n";
-        for (int i = 0; i < qtdtecnicos; i++) 
-            s += tecnicos[i].getId() + " - " + tecnicos[i].getNome() + "\n";
+        String s = "--- TECNICOS ---\n";
+        for (int i = 0; i < qtdtecnicos; i++) {
+            if (tecnicos[i].getPerfil().equals("Tecnicos")) {
+                s += tecnicos[i].getId() + " - " + 
+                     tecnicos[i].getNome() + " | Esp: " + 
+                     tecnicos[i].getEspecialidade() + "\n";
+            }
+        }
         return s;
     }
 
     public String listarcategorias() {
         String s = "--- CATEGORIAS ---\n";
-        for (int i = 0; i < qtdcategoria; i++) 
-            s +=categoria[i].getNome() + "\n";
+        for (int i = 0; i < qtdcategoria; i++) {
+            s += categoria[i].getId() + " - " + categoria[i].getNome() + "\n";
+        }
         return s;
     }
-
-    // Persistência em Arquivo
     public void salvarUsuariosArquivo() {
         try (PrintWriter out = new PrintWriter(new FileWriter("usuarios.txt"))) {
             for (int i = 0; i < qtdusuarios; i++) {
@@ -104,14 +108,49 @@ public class sistemachamado {
             String linha;
             while ((linha = br.readLine()) != null) {
                 String[] d = linha.split(";");
-                if (d.length == 3) cadastrarUsuario(d[0], d[1], d[2]);
+                if (d.length == 3) {
+
+                    if (!d[2].equalsIgnoreCase("Admin")) {
+                        usuarios[qtdusuarios++] = new usuarios(d[0], d[1], d[2]);
+                    }
+                }
             }
-        } catch (IOException e) { System.out.println("Novo arquivo será criado."); }
+        } catch (IOException e) { System.out.println("Arquivo não encontrado."); }
+    }
+    
+    public void salvartecnicosarquivo() {
+        try (PrintWriter out = new PrintWriter(new FileWriter("tecnicos.txt"))) {
+            for (int i = 0; i < qtdtecnicos; i++) { 
+                out.println(tecnicos[i].getNome() + ";" + tecnicos[i].getEspecialidade() + ";" + tecnicos[i].getPerfil());
+            }
+        } catch (IOException e) { System.out.println("Erro ao salvar."); }
+    }
+    
+    
+    public void carregarTecnicosArquivo() {
+        try (BufferedReader br = new BufferedReader(new FileReader("tecnicos.txt"))) {
+            String linha;
+            while ((linha = br.readLine()) != null) {
+                String[] d = linha.split(";");
+                if (d.length == 3) {
+                    tecnicos[qtdtecnicos++] = new tecnicos(d[0], d[1], d[2]);
+                }
+            }
+        } catch (IOException e) { System.out.println("Arquivo de técnicos não encontrado."); }
     }
 
     public boolean validarLogin(String email, String perfil) {
+        if (perfil.equals("Admin")) {
+            return email.equalsIgnoreCase("admin"); 
+        }
+
         for (int i = 0; i < qtdusuarios; i++) {
-            if (usuarios[i].getEmail().equalsIgnoreCase(email) && usuarios[i].getPerfil().equals(perfil)) return true;
+            if (usuarios[i] != null && usuarios[i].getPerfil() != null) {
+                if (usuarios[i].getEmail().equalsIgnoreCase(email) && 
+                    usuarios[i].getPerfil().equals(perfil)) {
+                    return true;
+                }
+            }
         }
         return false;
     }
@@ -121,21 +160,32 @@ public class sistemachamado {
     public void salvarcategoriaarquivo() {
         try (PrintWriter out = new PrintWriter(new FileWriter("categoria.txt"))) {
             for (int i = 0; i < qtdcategoria; i++) {
-                out.println(categoria[i].getNome());
+                out.println(categoria[i].getId() + ";" + categoria[i].getNome());
             }
         } catch (IOException e) { System.out.println("Erro ao salvar."); }
     }
     
+    
+
     public void carregarCategoriasArquivo() {
-        try (BufferedReader br = new BufferedReader(new FileReader("categorias.txt"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("categoria.txt"))) {
             String linha;
             while ((linha = br.readLine()) != null) {
-                String[] d = linha.split(";");
-                if (d.length == 1) cadastrarcategoria(d[0]);	
-            }
-        } catch (IOException e) { System.out.println("Novo arquivo será criado."); }
-    }
+                String[] dados = linha.split(";");
+                if (dados.length == 2) {
+                    int idArq = Integer.parseInt(dados[0]);
+                    String nomeArq = dados[1];
 
+                    categoria nova = new categoria(nomeArq);
+                    nova.setId(idArq); 
+                    
+                    categoria[qtdcategoria] = nova;
+                    qtdcategoria++;
+ 
+                }
+            }
+        } catch (IOException e) { }
+    }
     
     
 }
