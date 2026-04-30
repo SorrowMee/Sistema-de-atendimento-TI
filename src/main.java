@@ -7,16 +7,13 @@ public class main {
         sistema.carregarCategoriasArquivo();
         sistema.carregarTecnicosArquivo();
 
- 
         Object[] perfis = { "Admin", "Tecnico", "Usuario" };
         int escolha = JOptionPane.showOptionDialog(null, "Selecione seu perfil:", "Login", 
                 JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, perfis, perfis[0]);
         if (escolha == -1) return;
         String perfillogado = perfis[escolha].toString();
 
-
         Object[] opcoesLogin;
-        
         if (perfillogado.equals("Usuario")) {
             opcoesLogin = new Object[]{ "Logar", "Cadastrar Novo", "Sair" };
         } else {
@@ -27,9 +24,7 @@ public class main {
                 JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, opcoesLogin, opcoesLogin[0]);
 
         if (acao != -1 && opcoesLogin[acao].equals("Cadastrar Novo")) {
-            String n = JOptionPane.showInputDialog("Nome:");
-            String e = JOptionPane.showInputDialog("Email:");
-            sistema.cadastrarUsuario(n, e);
+            sistema.cadastrarUsuario(JOptionPane.showInputDialog("Nome:"), JOptionPane.showInputDialog("Email:"));
             JOptionPane.showMessageDialog(null, "Cadastrado! Agora faça login.");
         } else if (acao == -1 || opcoesLogin[acao].equals("Sair")) return;
 
@@ -38,13 +33,14 @@ public class main {
             JOptionPane.showMessageDialog(null, "Acesso negado!");
             return;
         }
+        
+        
+        usuarios usuarioLogado = sistema.buscarporemail(emailLogin);
 
-
-        int opcao = -1;
-        while (opcao != 0) {
+        while (true) {
             String[] botoes;
             if (perfillogado.equals("Admin")) {
-                botoes = new String[]{"Cadastrar usuario", "Cadastrar tecnico", "Cadastrar categoria","Abrir Chamado","Alterar Status","Listar usuários","Listar chamados","Listar categoria", "Listar tecnicos", "Sair"};
+                botoes = new String[]{"Cadastrar usuario", "Cadastrar tecnico", "Cadastrar categoria","Abrir chamado","Alterar Status","Listar usuários","Listar chamados","Listar categoria", "Listar tecnicos", "Sair"};
             } else if (perfillogado.equals("Tecnico")) {
                 botoes = new String[]{"Alterar Status", "Listar chamados", "Sair"};
             } else {
@@ -62,24 +58,29 @@ public class main {
                     sistema.cadastrarUsuario(JOptionPane.showInputDialog("Nome:"), JOptionPane.showInputDialog("Email:"));
                     break;
                 case "Cadastrar tecnico":
-                    sistema.cadastrartecnicos(JOptionPane.showInputDialog("Nome:"), JOptionPane.showInputDialog("Especialidade:"));
+                    sistema.cadastrartecnicos(JOptionPane.showInputDialog("Nome:"), JOptionPane.showInputDialog("Especialidade:"), JOptionPane.showInputDialog("Email"));
                     break;
                 case "Cadastrar categoria":
                     sistema.cadastrarcategoria(JOptionPane.showInputDialog("Nome da Categoria:"));
                     break;
-                case "Abrir Chamado":
-                	
-                	try {
-                    String desc = JOptionPane.showInputDialog("Descrição:");
-                    int idU = Integer.parseInt(JOptionPane.showInputDialog(sistema.listausuarios() + "ID Usuário:"));
-                    int idT = Integer.parseInt(JOptionPane.showInputDialog(sistema.listatecnicos() + "ID Técnico:"));
-                    int idC = Integer.parseInt(JOptionPane.showInputDialog(sistema.listarcategorias() + "ID Categoria:"));
-                    sistema.cadastrarchamado(desc, "Aberto", idU, idT, idC);
+                case "Abrir chamado":
+                    try {
+                        String desc = JOptionPane.showInputDialog("Descreva o problema:");
+                        if (desc == null || desc.isEmpty()) break;
+
+                        String tecSel = (String) JOptionPane.showInputDialog(null, "Técnico:", "Seleção", 3, null, sistema.getArrayNomesTecnicos(), null);
+                        String catSel = (String) JOptionPane.showInputDialog(null, "Categoria:", "Seleção", 3, null, sistema.getArrayNomesCategorias(), null);
+
+                        if (tecSel != null && catSel != null) {
+                            int idT = Integer.parseInt(tecSel.split(" - ")[0]);
+                            int idC = Integer.parseInt(catSel.split(" - ")[0]);
+                            
+                            // Se for Admin abrindo chamado, usuarioLogado é null, então usamos um ID padrão ou pedimos ID
+                            int idU = (usuarioLogado != null) ? usuarioLogado.getId() : 0; 
+                            sistema.cadastrarchamado(desc, "Aberto", idU, idT, idC);
+                        }
+                    } catch (Exception ex) { JOptionPane.showMessageDialog(null, "Erro ao abrir."); }
                     break;
-                    } catch (Exception ex) {
-                    	JOptionPane.showMessageDialog(null, "Erro:Digite apenas numero");
-                    	break;
-                    }
                 	
                 case "Listar usuários":
                 	JOptionPane.showMessageDialog(null, sistema.listausuarios());
@@ -89,6 +90,21 @@ public class main {
                 	break;
                 case "Listar tecnicos":
                 	JOptionPane.showMessageDialog(null, sistema.listatecnicos());
+                    break; // Faltava este break!
+                case "Listar chamados":
+                	JOptionPane.showMessageDialog(null, sistema.listarTodosChamados());
+                    break;
+                case "Alterar Status":
+                	String[] abertos = sistema.getArrayChamadosAbertos();
+                	if (abertos.length == 0) {
+                        JOptionPane.showMessageDialog(null, "Não há chamados abertos.");
+                        break;
+                    }
+                	String sel = (String) JOptionPane.showInputDialog(null, "Fechar chamado:", "Encerrar", 3, null, abertos, abertos[0]);
+                	if(sel != null) {
+                		sistema.fecharChamado(Integer.parseInt(sel.split(" - ")[0]));
+                	}
+                	break;
             }
         }
     }
