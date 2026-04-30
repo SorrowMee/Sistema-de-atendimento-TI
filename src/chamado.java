@@ -11,7 +11,7 @@ public class chamado {
 	
 	
 	public chamado(String descricao, String status, usuarios usuarios, tecnicos tecnicos, categoria categoria) {
-		this.id = contadorid;
+		this.id = contadorid++;
 		this.descricao = descricao;
 		this.status = status;
 		this.usuarios = usuarios;

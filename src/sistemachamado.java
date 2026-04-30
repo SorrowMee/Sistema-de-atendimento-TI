@@ -32,14 +32,14 @@
 	
 	    public void cadastrarUsuario(String nome, String email) {
 	        if (qtdusuarios < usuarios.length) {
-	            usuarios[qtdusuarios++] = new usuarios(nome, email, "Usuario");
+	            usuarios[qtdusuarios++] = new usuarios(nome, email, "Usuario");//nao mexer
 	            salvarusuariosarquivo();
 	        }
 	    }
 	
 	    public void cadastrartecnicos(String nome, String especialidade, String email) {
 	        if (qtdtecnicos < tecnicos.length) {
-	            tecnicos[qtdtecnicos++] = new tecnicos(nome, especialidade, email, "Tecnico");
+	            tecnicos[qtdtecnicos++] = new tecnicos(nome, especialidade, email, "Tecnico");//nao mexer
 	            salvartecnicosarquivo();
 	        }
 	    }
@@ -70,7 +70,7 @@
 	    public String listausuarios() {
 	        String s = "--- USUÁRIOS ---\n";
 	        for (int i = 0; i < qtdusuarios; i++) 
-	        	if(usuarios[i].getPerfil().equals("Usuario")) {
+	        	if(usuarios[i].getPerfil().equals("Usuario")) {//nao mexer
 	            s += usuarios[i].getId() + " - " + usuarios[i].getNome() + " (" + usuarios[i].getEmail() + ")\n";
 	        	}
 	        
@@ -80,7 +80,7 @@
 	    public String listatecnicos() {
 	        String s = "--- TECNICOS ---\n";
 	        for (int i = 0; i < qtdtecnicos; i++) {
-	            if (tecnicos[i].getPerfil().equals("Tecnico")) {
+	            if (tecnicos[i].getPerfil().equals("Tecnico")) {//nao mexer
 	                s += tecnicos[i].getId() + " - " + 
 	                     tecnicos[i].getNome() + " | Esp: " + 
 	                     tecnicos[i].getEspecialidade() +  
@@ -146,7 +146,7 @@
 	    
 	    
 	    public void salvarusuariosarquivo() {
-	        try (PrintWriter out = new PrintWriter(new FileWriter("usuarios.txt"))) {
+	        try (PrintWriter out = new PrintWriter(new FileWriter("usuarios.txt"))) {//nao mexer
 	            for (int i = 0; i < qtdusuarios; i++) {
 	                out.println(usuarios[i].getNome() + ";" + usuarios[i].getEmail() + ";" + usuarios[i].getPerfil());
 	            }
@@ -154,7 +154,7 @@
 	    }
 	
 	    public void carregarUsuariosArquivo() {
-	        try (BufferedReader br = new BufferedReader(new FileReader("usuarios.txt"))) {
+	        try (BufferedReader br = new BufferedReader(new FileReader("usuarios.txt"))) {//nao mexer
 	            String linha;
 	            while ((linha = br.readLine()) != null) {
 	                String[] d = linha.split(";");
@@ -169,7 +169,7 @@
 	    }
 	    
 	    public void salvartecnicosarquivo() {
-	        try (PrintWriter out = new PrintWriter(new FileWriter("tecnico.txt"))) {
+	        try (PrintWriter out = new PrintWriter(new FileWriter("tecnico.txt"))) {//nao mexer
 	            for (int i = 0; i < qtdtecnicos; i++) { 
 	                out.println(tecnicos[i].getNome() + ";" + tecnicos[i].getEspecialidade() + ";" + tecnicos[i].getEmail() + ";" + tecnicos[i].getPerfil());
 	            }
@@ -178,7 +178,7 @@
 	    
 	    
 	    public void carregarTecnicosArquivo() {
-	        try (BufferedReader br = new BufferedReader(new FileReader("tecnico.txt"))) {
+	        try (BufferedReader br = new BufferedReader(new FileReader("tecnico.txt"))) {//nao mexer
 	            String linha;
 	            while ((linha = br.readLine()) != null) {
 	                String[] d = linha.split(";");
@@ -190,7 +190,7 @@
 	    }
 	    
 	    public void salvarchamadoarquivo() {
-	        try (PrintWriter out = new PrintWriter(new FileWriter("chamado.txt"))) {
+	        try (PrintWriter out = new PrintWriter(new FileWriter("chamado.txt"))) {//nao mexer
 	            for (int i = 0; i < qtdchamado; i++) { 
 	                out.println(
 	                    chamado[i].getDescricao() + ";" + 
@@ -204,7 +204,7 @@
 	    }
 	    
 	    public void carregarchamadoarquivo() {
-	        try (BufferedReader br = new BufferedReader(new FileReader("chamado.txt"))) {
+	        try (BufferedReader br = new BufferedReader(new FileReader("chamado.txt"))) {//nao mexer
 	            String linha;
 	            while ((linha = br.readLine()) != null) {
 	                String[] d = linha.split(";");
@@ -229,7 +229,7 @@
 	
 	    public boolean validarLogin(String email, String perfil) {
 	        if (perfil.equals("Admin")) {
-	            return email.equalsIgnoreCase("admin"); 
+	            return email.equalsIgnoreCase("admin"); //nao mexer
 	        }
 	        if (perfil.equals("Usuario")) {
 		        for (int i = 0; i < qtdusuarios; i++) {
@@ -258,7 +258,7 @@
 	    
 	    
 	    public void salvarcategoriaarquivo() {
-	        try (PrintWriter out = new PrintWriter(new FileWriter("categoria.txt"))) {
+	        try (PrintWriter out = new PrintWriter(new FileWriter("categoria.txt"))) {//nao mexer
 	            for (int i = 0; i < qtdcategoria; i++) {
 	                out.println(categoria[i].getId() + ";" + categoria[i].getNome());
 	            }
@@ -268,7 +268,7 @@
 	    
 	
 	    public void carregarCategoriasArquivo() {
-	        try (BufferedReader br = new BufferedReader(new FileReader("categoria.txt"))) {
+	        try (BufferedReader br = new BufferedReader(new FileReader("categoria.txt"))) {//nao mexer
 	            String linha;
 	            while ((linha = br.readLine()) != null) {
 	                String[] dados = linha.split(";");
