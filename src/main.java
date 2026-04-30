@@ -6,7 +6,8 @@ public class main {
         sistema.carregarUsuariosArquivo(); 
         sistema.carregarCategoriasArquivo();
         sistema.carregarTecnicosArquivo();
-
+        sistema.carregarchamadoarquivo();
+        
         Object[] perfis = { "Admin", "Tecnico", "Usuario" };
         int escolha = JOptionPane.showOptionDialog(null, "Selecione seu perfil:", "Login", 
                 JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, perfis, perfis[0]);
@@ -75,7 +76,7 @@ public class main {
                             int idT = Integer.parseInt(tecSel.split(" - ")[0]);
                             int idC = Integer.parseInt(catSel.split(" - ")[0]);
                             
-                            // Se for Admin abrindo chamado, usuarioLogado é null, então usamos um ID padrão ou pedimos ID
+                          
                             int idU = (usuarioLogado != null) ? usuarioLogado.getId() : 0; 
                             sistema.cadastrarchamado(desc, "Aberto", idU, idT, idC);
                         }
@@ -90,9 +91,9 @@ public class main {
                 	break;
                 case "Listar tecnicos":
                 	JOptionPane.showMessageDialog(null, sistema.listatecnicos());
-                    break; // Faltava este break!
+                    break; 
                 case "Listar chamados":
-                	JOptionPane.showMessageDialog(null, sistema.listarTodosChamados());
+                	JOptionPane.showMessageDialog(null, sistema.listartodoschamados());
                     break;
                 case "Alterar Status":
                 	String[] abertos = sistema.getArrayChamadosAbertos();
@@ -105,7 +106,15 @@ public class main {
                 		sistema.fecharChamado(Integer.parseInt(sel.split(" - ")[0]));
                 	}
                 	break;
-            }
+                case "Meus chamados":
+                    if (usuarioLogado != null) {
+                        String meusChamados = sistema.listarchamadousuario(usuarioLogado.getId());
+                        JOptionPane.showMessageDialog(null, meusChamados);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Erro: Usuário não identificado.");
+                    }
+                    break;
         }
     }
+}
 }

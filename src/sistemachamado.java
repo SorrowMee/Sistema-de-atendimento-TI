@@ -33,13 +33,13 @@
 	    public void cadastrarUsuario(String nome, String email) {
 	        if (qtdusuarios < usuarios.length) {
 	            usuarios[qtdusuarios++] = new usuarios(nome, email, "Usuario");
-	            salvarUsuariosArquivo();
+	            salvarusuariosarquivo();
 	        }
 	    }
 	
 	    public void cadastrartecnicos(String nome, String especialidade, String email) {
 	        if (qtdtecnicos < tecnicos.length) {
-	            tecnicos[qtdtecnicos++] = new tecnicos(nome, especialidade, email, "Tecnicos");
+	            tecnicos[qtdtecnicos++] = new tecnicos(nome, especialidade, email, "Tecnico");
 	            salvartecnicosarquivo();
 	        }
 	    }
@@ -59,6 +59,7 @@
 	
 	        if (u != null && t != null && c != null) {
 	            chamado[qtdchamado++] = new chamado(desc, status, u, t, c);
+	            salvarchamadoarquivo();
 	            JOptionPane.showMessageDialog(null, "Chamado aberto!");
 	        } else {
 	            JOptionPane.showMessageDialog(null, "Erro: IDs inválidos!");
@@ -79,10 +80,10 @@
 	    public String listatecnicos() {
 	        String s = "--- TECNICOS ---\n";
 	        for (int i = 0; i < qtdtecnicos; i++) {
-	            if (tecnicos[i].getPerfil().equals("Tecnicos")) {
+	            if (tecnicos[i].getPerfil().equals("Tecnico")) {
 	                s += tecnicos[i].getId() + " - " + 
 	                     tecnicos[i].getNome() + " | Esp: " + 
-	                     tecnicos[i].getEspecialidade() + "\n" +
+	                     tecnicos[i].getEspecialidade() +  
 	                     tecnicos[i].getEmail();
 	            }
 	        }
@@ -98,7 +99,7 @@
 	    }
 	    
 	    
-	    public String listarTodosChamados() {
+	    public String listartodoschamados() {
 	        if (qtdchamado == 0) return "Nenhum chamado registrado.";
 	        String s = "--- LISTA DE CHAMADOS ---\n";
 	        for (int i = 0; i < qtdchamado; i++) {
@@ -109,10 +110,33 @@
 	        return s;
 	    }
 	    
+	    
+	    public String listarchamadousuario(int idusuario) {
+	    	String s = "Chamados aberto por você";
+	    	boolean encontrou = false;
+	    	
+	    	
+	    	for (int i = 0; i < qtdchamado; i++) {
+	    		if(chamado[i].getUsuarios().getId() == idusuario) {
+	    			s += "ID" + chamado[i].getId() +
+	    				"status:" + chamado[i].getStatus() +
+	    				"categoria" + chamado[i].getCategoria().getNome() +
+	    				"descrição" + chamado[i].getDescricao();
+	    			encontrou = true;
+	    		}
+	    	}
+	    	
+	    	if(!encontrou) {
+	    		return "Não a chamados abertos";
+	    	}
+	    	return s;
+	    }
+	    
 	    public void fecharChamado(int id) {
 	        for (int i = 0; i < qtdchamado; i++) {
 	            if (chamado[i].getId() == id) {
 	                chamado[i].setStatus("Fechado");
+	                salvarchamadoarquivo();
 	                JOptionPane.showMessageDialog(null, "Chamado #" + id + " encerrado com sucesso!");
 	                return;
 	            }
@@ -121,7 +145,7 @@
 	    
 	    
 	    
-	    public void salvarUsuariosArquivo() {
+	    public void salvarusuariosarquivo() {
 	        try (PrintWriter out = new PrintWriter(new FileWriter("usuarios.txt"))) {
 	            for (int i = 0; i < qtdusuarios; i++) {
 	                out.println(usuarios[i].getNome() + ";" + usuarios[i].getEmail() + ";" + usuarios[i].getPerfil());
@@ -145,7 +169,7 @@
 	    }
 	    
 	    public void salvartecnicosarquivo() {
-	        try (PrintWriter out = new PrintWriter(new FileWriter("tecnicos.txt"))) {
+	        try (PrintWriter out = new PrintWriter(new FileWriter("tecnico.txt"))) {
 	            for (int i = 0; i < qtdtecnicos; i++) { 
 	                out.println(tecnicos[i].getNome() + ";" + tecnicos[i].getEspecialidade() + ";" + tecnicos[i].getEmail() + ";" + tecnicos[i].getPerfil());
 	            }
@@ -154,7 +178,7 @@
 	    
 	    
 	    public void carregarTecnicosArquivo() {
-	        try (BufferedReader br = new BufferedReader(new FileReader("tecnicos.txt"))) {
+	        try (BufferedReader br = new BufferedReader(new FileReader("tecnico.txt"))) {
 	            String linha;
 	            while ((linha = br.readLine()) != null) {
 	                String[] d = linha.split(";");
@@ -163,6 +187,44 @@
 	                }
 	            }
 	        } catch (IOException e) { System.out.println("Arquivo de técnicos não encontrado."); }
+	    }
+	    
+	    public void salvarchamadoarquivo() {
+	        try (PrintWriter out = new PrintWriter(new FileWriter("chamado.txt"))) {
+	            for (int i = 0; i < qtdchamado; i++) { 
+	                out.println(
+	                    chamado[i].getDescricao() + ";" + 
+	                    chamado[i].getStatus() + ";" + 
+	                    chamado[i].getUsuarios().getId() + ";" + 
+	                    chamado[i].getTecnicos().getId() + ";" + 
+	                    chamado[i].getCategoria().getId()
+	                );
+	            }
+	        } catch (IOException e) { System.out.println("Erro ao salvar chamados."); }
+	    }
+	    
+	    public void carregarchamadoarquivo() {
+	        try (BufferedReader br = new BufferedReader(new FileReader("chamado.txt"))) {
+	            String linha;
+	            while ((linha = br.readLine()) != null) {
+	                String[] d = linha.split(";");
+	                if (d.length == 5) {
+	                    String desc = d[0];
+	                    String status = d[1];
+	                    int idU = Integer.parseInt(d[2]);
+	                    int idT = Integer.parseInt(d[3]);
+	                    int idC = Integer.parseInt(d[4]);
+
+	                    usuarios u = procurausu(idU);
+	                    tecnicos t = procuratec(idT);
+	                    categoria c = procuracat(idC);
+
+	                    if (u != null && t != null && c != null) {
+	                        chamado[qtdchamado++] = new chamado(desc, status, u, t, c);
+	                    }
+	                }
+	            }
+	        } catch (IOException e) { System.out.println("Arquivo de chamados não encontrado."); }
 	    }
 	
 	    public boolean validarLogin(String email, String perfil) {
