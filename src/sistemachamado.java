@@ -112,16 +112,16 @@
 	    
 	    
 	    public String listarchamadousuario(int idusuario) {
-	    	String s = "Chamados aberto por você";
+	    	String s = "Chamados aberto por você \n";
 	    	boolean encontrou = false;
 	    	
 	    	
 	    	for (int i = 0; i < qtdchamado; i++) {
 	    		if(chamado[i].getUsuarios().getId() == idusuario) {
-	    			s += "ID" + chamado[i].getId() +
-	    				"status:" + chamado[i].getStatus() +
-	    				"categoria" + chamado[i].getCategoria().getNome() +
-	    				"descrição" + chamado[i].getDescricao();
+	    			s += "ID: " + chamado[i].getId() + "\n" +
+	    				"Status: " + chamado[i].getStatus() + "\n" +
+	    				"Categoria: " + chamado[i].getCategoria().getNome() + "\n" +
+	    				"Descrição: " + chamado[i].getDescricao() + "\n";
 	    			encontrou = true;
 	    		}
 	    	}
