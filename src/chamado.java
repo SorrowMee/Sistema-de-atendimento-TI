@@ -9,7 +9,7 @@ public class chamado {
 	private static int contadorid = 1;
 	
 	
-	
+	//construtor definindo id, nome, usuarios
 	public chamado(String descricao, String status, usuarios usuarios, tecnicos tecnicos, categoria categoria) {
 		this.id = contadorid++;
 		this.descricao = descricao;
@@ -41,3 +41,7 @@ public class chamado {
 	
 
 }
+
+
+//essas classes seperadas estão definindo funções para serem puxadas e usadas em outras classes utilizando
+//setters e getters assim organizando o codigo para melhor alteração

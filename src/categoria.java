@@ -22,3 +22,7 @@ public class categoria {
 	
 
 }
+
+
+//essas classes seperadas estão construindo funções para serem puxadas e usadas em outras classes utilizando
+//setters e getters assim organizando o codigo para melhor alteração

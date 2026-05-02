@@ -7,7 +7,7 @@ public class tecnicos {
 	private String perfil;
 	private static int contadorid = 1;
 	
-
+	//construtor definindo id, nome, usuarios
 	public tecnicos(String nome, String especialidade,String email, String perfil) {
 		this.id = contadorid++;
 		this.nome = nome;
@@ -16,7 +16,7 @@ public class tecnicos {
 		this.perfil = perfil;
 		
 	}
-	
+	//getters e setter utilizando o this acima
 	public int getId() { return id;}
 	public void setId(int id) { this.id = id; }
 	
@@ -38,3 +38,7 @@ public class tecnicos {
 	
 
 }
+
+
+//essas classes seperadas estão definindo funções para serem puxadas e usadas em outras classes utilizando
+//setters e getters assim organizando o codigo para melhor alteração
