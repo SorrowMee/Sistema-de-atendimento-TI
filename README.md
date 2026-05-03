@@ -1,4 +1,6 @@
-<img src="https://logodownload.org/wp-content/uploads/2021/06/unip-logo.png" width="300">
+<p align="center">
+    <img src="https://logodownload.org/wp-content/uploads/2021/06/unip-logo.png" width="300">
+</p>
 
 # APS 2026 -- Sistema de Atendimento TI
 
