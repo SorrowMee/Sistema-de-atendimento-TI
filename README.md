@@ -1,3 +1,5 @@
+<img src="https://logodownload.org/wp-content/uploads/2021/06/unip-logo.png" width="300">
+
 # APS 2026 -- Sistema de Atendimento TI
 
 Este projeto é um sistema de gerenciamento de chamados de suporte técnico desenvolvido em Java, com foco em organização e controle de atendimentos.
